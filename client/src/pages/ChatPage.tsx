@@ -63,86 +63,100 @@ const ChatPage: React.FC<ChatPageProps> = ({
             </p>
           </div>
         ) : (
-          <div className="max-w-none space-y-3">
+          <div className="max-w-none space-y-1">
             {Array.isArray(messages) &&
               messages.map((msg, idx) => {
                 const isOwnMessage = msg.user === username;
+                const prevMessage = idx > 0 ? messages[idx - 1] : null;
+                const isFirstInGroup =
+                  !prevMessage || prevMessage.user !== msg.user;
+                const nextMessage =
+                  idx < messages.length - 1 ? messages[idx + 1] : null;
+                const isLastInGroup =
+                  !nextMessage || nextMessage.user !== msg.user;
+
                 return (
                   <div
                     key={idx}
-                    className={`flex ${
-                      isOwnMessage ? "justify-end" : "justify-start"
-                    }`}
+                    className={`${isFirstInGroup ? "mt-2" : "mt-1"}`}
                   >
+                    {/* Message container */}
                     <div
-                      className={`flex items-start max-w-[70%] ${
-                        isOwnMessage ? "flex-row-reverse" : "flex-row"
+                      className={`flex ${
+                        isOwnMessage ? "justify-end" : "justify-start"
                       }`}
                     >
-                      {/* User Avatar */}
                       <div
-                        className={`w-8 h-8 ${
-                          isOwnMessage ? "bg-[#007a5a]" : "bg-[#4a154b]"
-                        } rounded-full flex items-center justify-center flex-shrink-0 ${
-                          isOwnMessage ? "ml-2" : "mr-2"
+                        className={`flex max-w-[70%] ${
+                          isOwnMessage ? "flex-row-reverse" : "flex-row"
                         }`}
                       >
-                        <span className="text-white text-xs font-bold">
-                          {msg.user.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-
-                      {/* Message Bubble */}
-                      <div
-                        className={`rounded-2xl px-4 py-2 shadow-sm ${
-                          isOwnMessage
-                            ? "bg-[#007a5a] text-white rounded-br-md"
-                            : "bg-white text-[#1d1c1d] border border-[#e1e5e9] rounded-bl-md"
-                        }`}
-                      >
-                        {/* Username and timestamp */}
-                        <div
-                          className={`flex items-baseline mb-1 ${
-                            isOwnMessage ? "justify-end" : "justify-start"
-                          }`}
-                        >
-                          <span
-                            className={`text-xs font-medium ${
-                              isOwnMessage ? "text-green-100" : "text-[#616061]"
+                        {/* User Avatar - only show for last message in group */}
+                        {isLastInGroup ? (
+                          <div
+                            className={`w-8 h-8 ${
+                              isOwnMessage ? "bg-[#007a5a]" : "bg-[#4a154b]"
+                            } rounded-full flex items-center justify-center flex-shrink-0 ${
+                              isOwnMessage ? "ml-2 mt-auto" : "mr-2 mt-auto"
                             }`}
                           >
-                            {msg.user}
-                          </span>
-                          <span
-                            className={`text-xs ml-2 ${
-                              isOwnMessage ? "text-green-200" : "text-[#999]"
-                            }`}
-                          >
-                            now
-                          </span>
-                        </div>
-
-                        {/* Message text */}
-                        {msg.text && (
-                          <p
-                            className={`text-sm leading-5 break-words ${
-                              isOwnMessage ? "text-white" : "text-[#1d1c1d]"
-                            }`}
-                          >
-                            {msg.text}
-                          </p>
-                        )}
-
-                        {/* Message image */}
-                        {msg.image && (
-                          <div className="mt-2">
-                            <img
-                              src={msg.image}
-                              alt="shared"
-                              className="max-w-full max-h-64 rounded-lg"
-                            />
+                            <span className="text-white text-xs font-bold">
+                              {msg.user.charAt(0).toUpperCase()}
+                            </span>
                           </div>
+                        ) : (
+                          // Spacer to maintain alignment for grouped messages
+                          <div
+                            className={`w-8 ${isOwnMessage ? "ml-2" : "mr-2"}`}
+                          />
                         )}
+
+                        {/* Message content with username */}
+                        <div className="flex flex-col">
+                          {/* Username - only show for first message in group, aligned with bubble */}
+                          {isFirstInGroup && (
+                            <div
+                              className={`mb-0.5 ${
+                                isOwnMessage ? "text-right" : "text-left"
+                              }`}
+                            >
+                              <span className="text-xs font-medium text-[#616061]">
+                                {msg.user}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Message Bubble */}
+                          <div
+                            className={`px-3 py-1.5 shadow-sm rounded-lg ${
+                              isOwnMessage
+                                ? "bg-[#007a5a] text-white"
+                                : "bg-white text-[#1d1c1d] border border-[#e1e5e9]"
+                            }`}
+                          >
+                            {/* Message text */}
+                            {msg.text && (
+                              <p
+                                className={`text-sm leading-5 break-words ${
+                                  isOwnMessage ? "text-white" : "text-[#1d1c1d]"
+                                }`}
+                              >
+                                {msg.text}
+                              </p>
+                            )}
+
+                            {/* Message image */}
+                            {msg.image && (
+                              <div className="mt-2">
+                                <img
+                                  src={msg.image}
+                                  alt="shared"
+                                  className="max-w-full max-h-64 rounded-lg"
+                                />
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
