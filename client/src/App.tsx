@@ -10,6 +10,7 @@ import {
 import io, { Socket } from "socket.io-client";
 import RoomListPage from "./pages/RoomListPage";
 import ChatPage from "./pages/ChatPage";
+import AuthPage from "./pages/AuthPage";
 
 const SOCKET_URL = "http://localhost:3000";
 
@@ -154,6 +155,7 @@ const App: React.FC = () => {
             />
           }
         />
+        <Route path="/auth" element={<AuthPage />} />
       </Routes>
     </Router>
   );
