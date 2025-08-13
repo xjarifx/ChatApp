@@ -116,7 +116,7 @@ const ChatPage: React.FC<ChatPageProps> = ({
                           {/* Username - only show for first message in group, aligned with bubble */}
                           {isFirstInGroup && (
                             <div
-                              className={`mb-0.5 ${
+                              className={`mb-1 ${
                                 isOwnMessage ? "text-right" : "text-left"
                               }`}
                             >
