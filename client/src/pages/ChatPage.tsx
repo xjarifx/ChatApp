@@ -40,7 +40,7 @@ const ChatPage: React.FC<ChatPageProps> = ({
           </div>
         </div>
         <Button
-          className="h-8 px-3 bg-[#007a5a] hover:bg-[#006644] text-white font-medium rounded text-sm"
+          className="h-8 px-3 bg-[#e01e5a] hover:bg-[#c91c55] text-white font-medium rounded text-sm"
           onClick={onChangeRoom}
         >
           Leave workspace
@@ -48,10 +48,10 @@ const ChatPage: React.FC<ChatPageProps> = ({
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 bg-white">
+      <div className="flex-1 overflow-y-auto px-6 py-4 bg-[#f8f9fa]">
         {Array.isArray(messages) && messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-12 h-12 bg-[#f8f9fa] border border-[#d1d2d3] rounded-lg flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-white border border-[#d1d2d3] rounded-lg flex items-center justify-center mb-4">
               <span className="text-[#616061] text-xl">#</span>
             </div>
             <h2 className="text-xl font-bold text-[#1d1c1d] mb-2">
@@ -63,47 +63,91 @@ const ChatPage: React.FC<ChatPageProps> = ({
             </p>
           </div>
         ) : (
-          <div className="max-w-none">
+          <div className="max-w-none space-y-3">
             {Array.isArray(messages) &&
-              messages.map((msg, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-start mb-4 hover:bg-[#f8f9fa] px-4 py-2 rounded-md transition-colors"
-                >
-                  {/* User Avatar */}
-                  <div className="w-9 h-9 bg-[#4a154b] rounded-lg flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
-                    <span className="text-white text-sm font-bold">
-                      {msg.user.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-
-                  {/* Message Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline mb-1">
-                      <span className="font-bold text-[#1d1c1d] text-sm mr-2">
-                        {msg.user}
-                      </span>
-                      <span className="text-xs text-[#616061]">now</span>
-                    </div>
-
-                    {msg.text && (
-                      <p className="text-[#1d1c1d] text-sm leading-5 break-words">
-                        {msg.text}
-                      </p>
-                    )}
-
-                    {msg.image && (
-                      <div className="mt-2">
-                        <img
-                          src={msg.image}
-                          alt="shared"
-                          className="max-w-md max-h-80 rounded-lg border border-[#d1d2d3] shadow-sm"
-                        />
+              messages.map((msg, idx) => {
+                const isOwnMessage = msg.user === username;
+                return (
+                  <div
+                    key={idx}
+                    className={`flex ${
+                      isOwnMessage ? "justify-end" : "justify-start"
+                    }`}
+                  >
+                    <div
+                      className={`flex items-start max-w-[70%] ${
+                        isOwnMessage ? "flex-row-reverse" : "flex-row"
+                      }`}
+                    >
+                      {/* User Avatar */}
+                      <div
+                        className={`w-8 h-8 ${
+                          isOwnMessage ? "bg-[#007a5a]" : "bg-[#4a154b]"
+                        } rounded-full flex items-center justify-center flex-shrink-0 ${
+                          isOwnMessage ? "ml-2" : "mr-2"
+                        }`}
+                      >
+                        <span className="text-white text-xs font-bold">
+                          {msg.user.charAt(0).toUpperCase()}
+                        </span>
                       </div>
-                    )}
+
+                      {/* Message Bubble */}
+                      <div
+                        className={`rounded-2xl px-4 py-2 shadow-sm ${
+                          isOwnMessage
+                            ? "bg-[#007a5a] text-white rounded-br-md"
+                            : "bg-white text-[#1d1c1d] border border-[#e1e5e9] rounded-bl-md"
+                        }`}
+                      >
+                        {/* Username and timestamp */}
+                        <div
+                          className={`flex items-baseline mb-1 ${
+                            isOwnMessage ? "justify-end" : "justify-start"
+                          }`}
+                        >
+                          <span
+                            className={`text-xs font-medium ${
+                              isOwnMessage ? "text-green-100" : "text-[#616061]"
+                            }`}
+                          >
+                            {msg.user}
+                          </span>
+                          <span
+                            className={`text-xs ml-2 ${
+                              isOwnMessage ? "text-green-200" : "text-[#999]"
+                            }`}
+                          >
+                            now
+                          </span>
+                        </div>
+
+                        {/* Message text */}
+                        {msg.text && (
+                          <p
+                            className={`text-sm leading-5 break-words ${
+                              isOwnMessage ? "text-white" : "text-[#1d1c1d]"
+                            }`}
+                          >
+                            {msg.text}
+                          </p>
+                        )}
+
+                        {/* Message image */}
+                        {msg.image && (
+                          <div className="mt-2">
+                            <img
+                              src={msg.image}
+                              alt="shared"
+                              className="max-w-full max-h-64 rounded-lg"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         )}
       </div>
